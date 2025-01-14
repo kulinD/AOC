@@ -144,8 +144,108 @@ int partOne(char **lines, int numLines)
         {
             solution += (int)pow(2.0, (double)(matches - 1));
         }
+        free(winningArr);
+        free(cardArr);
+        free(winningNumbers);
+        free(cardNumbers);
+        free(tempLine);
+    }
+    return solution;
+}
+
+int partTwo(char **lines, int numLines)
+{
+    int solution = 0;
+
+    // Delimiters
+    const char *startDelimiter  = ": ";
+    const char *cardDelimiter   = " | ";
+    const char *numbersDelimiter= " ";
+
+    int *cards = (int *)malloc(numLines * sizeof(int));
+    for (int i = 0; i < numLines; i++)
+    {
+        cards[i] = 1;
     }
 
+    for (int i = 0; i < numLines; i++)
+    {
+        // Make a temp copy of the line to manipulate
+        char *tempLine = (char *)malloc(strlen(lines[i]) + 1);
+        strcpy(tempLine, lines[i]);
+
+        // Replace "  " with " 0"
+        replaceDoubleSpaceWithZero(tempLine);
+
+        // Remove everything up to and ": "
+        trimToDelimiter(tempLine, startDelimiter);
+
+        /* Extract winningNumbers = substring before " | "
+           and cardNumbers = substring after " | " */
+        char *cardPos = strstr(tempLine, cardDelimiter);
+        if (!cardPos)
+        {
+            // Skip if no delim
+            free(tempLine);
+            continue;
+        }
+
+        // Split into two pieces
+        int delimIndex = (int)(cardPos - tempLine);
+
+        // winningNumbers = tempLine[0..delimIndex-1], terminate null
+        char *winningNumbers = (char *)malloc(delimIndex + 1);
+        strncpy(winningNumbers, tempLine, delimIndex);
+        winningNumbers[delimIndex] = '\0';
+
+        // cardNumbers after the " | "
+        cardPos += strlen(cardDelimiter);
+        char *cardNumbers = (char *)malloc(strlen(cardPos) + 1);
+        strcpy(cardNumbers, cardPos);
+
+        // Split winningNumbers by space
+        char **winningArr = NULL;
+        int winningCount = splitBySpace(winningNumbers, &winningArr);
+
+        // Split cardNumbers by space */
+        char **cardArr = NULL;
+        int cardCount = splitBySpace(cardNumbers, &cardArr);
+
+        // count matches
+        int matches = 0;
+        for (int j = 0; j < winningCount; j++)
+        {
+            for (int k = 0; k < cardCount; k++)
+            {
+                if (strcmp(winningArr[j], cardArr[k]) == 0)
+                {
+                    matches++;
+                }
+            }
+        }
+
+        // for each match update card count
+        for (int j = 0; j < matches; j++)
+        {
+            if (i + j + 1 < numLines)
+            {
+                cards[i + j + 1] += cards[i];
+            }
+        }
+        free(winningArr);
+        free(cardArr);
+        free(winningNumbers);
+        free(cardNumbers);
+        free(tempLine);
+    }
+
+    // calculate solution
+    for (int i = 0; i < numLines; i++)
+    {
+        solution += cards[i];
+    }
+
+    free(cards);
     return solution;
 }
 
@@ -175,7 +275,6 @@ int main(int argc, char* argv[])
             break;
 
         // allocate space to store current line in lines array
-        //lines = (char **)realloc(lines, (numLines + 1) * sizeof(char *));
         lines[numLines] = (char *)malloc(strlen(buffer) + 1);
         strcpy(lines[numLines], buffer);
 
@@ -186,7 +285,13 @@ int main(int argc, char* argv[])
     int solution1 = partOne(lines, numLines);
     printf("%d\n", solution1);
 
-    free(lines);
+    int solution2 = partTwo(lines, numLines);
+    printf("%d\n", solution2);
+
+    for(int i = 0; i < numLines; i++)
+    {
+        free(lines[i]);
+    }
 
     return 0;
 }
