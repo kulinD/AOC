@@ -29,6 +29,20 @@ MapGroupNode* createMapGroupNode(void) {
     return node;
 }
 
+// create MapLineNode with a given dest, source, range
+MapLineNode* createMapLineNode(long long dest, long long source, long long range) {
+    MapLineNode *node = malloc(sizeof(MapLineNode));
+    if (!node) {
+        fprintf(stderr, "Memory allocation error\n");
+        exit(1);
+    }
+    (*node).dest = dest;
+    node->source = source;
+    node->range = range;
+    node->next = NULL;
+    return node;
+}
+
 // append group node to linked list
 void appendMapGroup(MapGroupNode **head, MapGroupNode *group) {
     if (!*head) {
@@ -42,6 +56,16 @@ void appendMapGroup(MapGroupNode **head, MapGroupNode *group) {
 }
 
 // append MapLineNode to group
+void appendMapLine(MapGroupNode *group, MapLineNode *line) {
+    if (!group->mapLinesHead) {
+        group->mapLinesHead = line;
+    } else {
+        MapLineNode *current = group->mapLinesHead;
+        while (current->next)
+            current = current->next;
+        current->next = line;
+    }
+}
 
 
 int main(void) {
@@ -72,6 +96,24 @@ int main(void) {
         seedStr = prefixPos + strlen(seedsPrefix);
     }
     
+    // parse seeds into an array
+    long long *seeds = NULL;
+    size_t seedsCount = 0, seedsCapacity = 0;
+    char *token = strtok(seedStr, " ");
+    while (token != NULL) {
+        long long value = strtoll(token, NULL, 10);
+        if (seedsCount == seedsCapacity) {
+            seedsCapacity = (seedsCapacity == 0) ? 4 : seedsCapacity * 2;
+            seeds = realloc(seeds, seedsCapacity * sizeof(long long));
+            if (!seeds) {
+                fprintf(stderr, "Memory allocation error for seeds\n");
+                exit(1);
+            }
+        }
+        seeds[seedsCount++] = value;
+        token = strtok(NULL, " ");
+    }
+    
     // read lines and build groups
     MapGroupNode *groupsHead = NULL;
     MapGroupNode *currentGroup = NULL;
@@ -91,28 +133,54 @@ int main(void) {
             // parse line into dest, source, range nums
             char *lineToken = strtok(buffer, " ");
             if (lineToken == NULL) continue;
-            long long source = strtoll(lineToken, NULL, 10);
-            
-            lineToken = strtok(NULL, " ");
-            if (lineToken == NULL) continue;
             long long dest = strtoll(lineToken, NULL, 10);
             
             lineToken = strtok(NULL, " ");
             if (lineToken == NULL) continue;
+            long long source = strtoll(lineToken, NULL, 10);
+            
+            lineToken = strtok(NULL, " ");
+            if (lineToken == NULL) continue;
             long long range = strtoll(lineToken, NULL, 10);
+
+            MapLineNode *lineNode = createMapLineNode(dest, source, range);
 
             if (currentGroup == NULL){
                 currentGroup = createMapGroupNode();
                 appendMapGroup(&groupsHead, currentGroup);
             }
             // append MapLine to group
+            appendMapLine(currentGroup, lineNode);
         }
     }
     fclose(f);
 
     // processing each seed through each group
-    // seed = dest + (seed - source) ???
-    
+    // seed >= source && seed < source + range
+    // seed = dest + (seed - source)
+    long long solution = 1000000000000000LL;
+    for (size_t i = 0; i < seedsCount; i++){
+        long long seed = seeds[i];
+
+        for (MapGroupNode *group = groupsHead; group != NULL; group = group -> next){
+            MapLineNode *num = NULL;
+
+            for (MapLineNode *line = group->mapLinesHead; line != NULL; line = line-> next){
+                if (seed >= line->source && seed < line->source + line->range){
+                    num = line;
+                }
+            }
+            if (num != NULL){
+                seed = num->dest + (seed - num->source);
+            }
+        }
+        if (seed < solution){
+            solution = seed;
+        }
+    }
+
+    printf("Solution: %lld\n", solution);
+    free(seeds);
 
     return 0;
 }
