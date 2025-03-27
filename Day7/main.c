@@ -130,8 +130,8 @@ int32_t count_winnings(Hand *hands, int32_t num_hands) {
     return winnings;
 }
 
-int32_t main(void) {
-    FILE *file = fopen("input.txt", "r");
+int32_t main(int argc, char * argv[]) {
+    FILE *file = fopen(argv[1], "r");
     if (!file) {
         printf("Failed to open input file");
         return 1;
