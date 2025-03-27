@@ -158,7 +158,7 @@ int32_t main(void) {
     // Adjust hand for part2 jokers
     for( int idx =0; idx<num_hands; idx++ ) {
         hands[ idx ].handType = classify_joker_hand( hands[ idx ] );
-        // remap the values to account for Joker's new drop in value
+        // remap the values to account for Jokers
         int new_value[ 13 ] = { 1, 2,3,4,5,6,7,8,9, 0, 10, 11 ,12 };
         for( int card_no=0; card_no<5; card_no++ ) {
             hands[idx].cards_values[card_no] = new_value[ hands[idx].cards_values[card_no] ];
