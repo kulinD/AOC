@@ -13,7 +13,7 @@ typedef struct Node {
     uint32_t right;
 } Node_t;
 
-// Convert a string ("AAA", "BBB", ... "ZZZ") to a number index (0 for "AAA")
+// Convert a string ("AAA", "BBB", ... "ZZZ") to a base-26 index (0 for "AAA")
 uint32_t str_val(const char* str) {
     uint32_t result = 0;
 
@@ -24,10 +24,20 @@ uint32_t str_val(const char* str) {
         }
         str++;
     }
+
     return result;
 }
 
-// Read instructions and build the Node tree
+void str_from_val(uint32_t val, char* str) {
+    str[3] = '\0';
+    str[2] = 'A' + val % 26;
+    val /= 26;
+    str[1] = 'A' + val % 26;
+    val /= 26;
+    str[0] = 'A' + val % 26;
+}
+
+// Read instructions and build the Node_t tree
 uint32_t read_input(FILE* file, char* instructions, Node_t* arr) {
     if (fscanf(file, "%s", instructions) != 1) {
         printf("Failed to read instructions\n");
@@ -44,6 +54,31 @@ uint32_t read_input(FILE* file, char* instructions, Node_t* arr) {
     return 1;
 }
 
+int ends_in_Z(uint32_t index) {
+    char str[4];
+    str_from_val(index, str);
+    return str[2] == 'Z';
+}
+
+int ends_in_A(uint32_t index) {
+    char str[4];
+    str_from_val(index, str);
+    return str[2] == 'A';
+}
+
+uint64_t gcd(uint64_t a, uint64_t b) {
+    while (b) {
+        uint64_t t = b;
+        b = a % b;
+        a = t;
+    }
+    return a;
+}
+
+uint64_t lcm(uint64_t a, uint64_t b) {
+    return (a / gcd(a, b)) * b;
+}
+
 #define START "AAA"
 // Execute navigation instructions and return the number of steps
 uint32_t execute_instructions(const char* instructions, const Node_t* arr) {
@@ -51,7 +86,7 @@ uint32_t execute_instructions(const char* instructions, const Node_t* arr) {
     uint32_t index = str_val(START);
     uint32_t steps = 0;
 
-    while (index >= 0 && index < MAX_NODES) {
+    while (index < MAX_NODES) {
         char instr = instructions[steps % numInstr];
         if (instr == 'R') {
             index = arr[index].right;
@@ -64,7 +99,21 @@ uint32_t execute_instructions(const char* instructions, const Node_t* arr) {
     return steps;
 }
 
-int main(uint32_t argc, char ** argv) {
+uint64_t steps_to_Z(uint32_t start, const char* instructions, const Node_t* arr) {
+    uint32_t numInstr = strlen(instructions);
+    uint32_t index = start;
+    uint64_t steps = 0;
+
+    while (!ends_in_Z(index)) {
+        char instr = instructions[steps % numInstr];
+        index = (instr == 'R') ? arr[index].right : arr[index].left;
+        steps++;
+    }
+
+    return steps;
+}
+
+uint32_t main(uint32_t argc, char ** argv) {
     FILE* file = fopen(argv[1], "r");
     if (!file) {
         printf("Could not open input file.");
@@ -80,14 +129,25 @@ int main(uint32_t argc, char ** argv) {
 
     char instructions[MAX_INSTR];
     if (!read_input(file, instructions, arr)) {
-        printf("bad read!");
         free(arr);
         fclose(file);
         return 1;
     }
 
-    uint32_t result = execute_instructions(instructions, arr);
-    printf("%d\n", result);
+    // part 1
+    uint32_t part1_result = execute_instructions(instructions, arr);
+    printf("Part 1: %u\n", part1_result);
+
+    // part 2
+    uint64_t part2_result = 1;
+    for (uint32_t i = 0; i < MAX_NODES; i++) {
+        if (arr[i].left == 0 && arr[i].right == 0) continue;
+        if (ends_in_A(i)) {
+            uint64_t steps = steps_to_Z(i, instructions, arr);
+            part2_result = lcm(part2_result, steps);
+        }
+    }
+    printf("Part 2: %llu\n", part2_result);
 
     free(arr);
     fclose(file);
