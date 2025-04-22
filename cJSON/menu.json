@@ -1,0 +1,460 @@
+{
+    "controls": [
+        {
+            "numeric": {
+                "name": "system_id",
+                "text": "System ID",
+                "min": 0,
+                "max": 200,
+                "size": 32
+            }
+        },
+        {
+            "numeric": {
+                "name": "pager_id",
+                "text": "Pager ID",
+                "min": 1,
+                "max": 9999,
+                "size": 32
+            }
+        },
+        {
+            "numeric": {
+                "name": "all_page_id",
+                "text": "All Page ID",
+                "min": 1,
+                "max": 9999,
+                "size": 32
+            }
+        },
+        {
+            "boolean": {
+                "name": "vibe_enable",
+                "text": "Vibe Enable"
+            }
+        },
+        {
+            "boolean": {
+               "name": "vibe_key_click_enable",
+               "text": "Vibe Key Enable"
+            }
+        },
+        {
+            "boolean": {
+                "name": "speaker_enable",
+                "text": "Beep Enable"
+            }
+        },
+        {
+            "boolean": {
+                "name": "speaker_key_click_enable",
+                "text": "Speaker Key Enable"
+            }
+        },
+        {
+            "r5g6b5": {
+                "name": "pager_id_fg_color",
+                "text": "Pager ID ForeGrnd",
+                "target": "foreground",
+                "linked": "pager_id_bg_color"
+            }
+        },
+        {
+            "r5g6b5": {
+                "name": "pager_id_bg_color",
+                "text": "Pager ID BackGrnd",
+                "target": "background",
+                "linked": "pager_id_fg_color"
+            }
+        },
+        {
+            "r5g6b5": {
+                "name": "pager_msg_fg_color",
+                "text": "Pager Message ForeGrnd",
+                "target": "foreground",
+                "linked": "pager_msg_bg_color"
+            }
+        },
+        {
+            "r5g6b5": {
+                "name": "pager_msg_bg_color",
+                "text": "Pager Message BackGrnd",
+                "target": "background",
+                "linked": "pager_msg_fg_color"
+            }
+        },
+        {
+            "r5g6b5": {
+                "name": "all_page_msg_fg_color",
+                "text": "All Page Message ForeGrnd",
+                "target": "foreground",
+                "linked": "all_page_msg_bg_color"
+            }
+        },
+        {
+            "r5g6b5": {
+                "name": "all_page_msg_bg_color",
+                "text": "All Page Message BackGrnd",
+                "target": "background",
+                "linked": "all_page_msg_fg_color"
+            }
+        },
+        {
+            "percent": {
+                "name": "backlight_bright_percent",
+                "text": "Bright %"
+            }
+        },
+        {
+            "percent": {
+                "name": "backlight_dim_percent",
+                "text": "Dim %"
+            }
+        },
+        {
+            "numeric": {
+                "name": "backlight_bright_duration_ms",
+                "text": "Bright Duration",
+                "min": 0,
+                "max": 120000,
+                "scale": 1000,
+                "size": 32
+            }
+        },
+        {
+            "numeric": {
+                "name": "backlight_dim_duration_ms",
+                "text": "Dim Duration",
+                "min": 0,
+                "max": 300000,
+                "scale": 1000,
+                "size": 32
+            }
+        },
+        {
+            "font": {
+                "name": "pager_id_font_size",
+                "text": "Pager ID Size",
+                "allowed": [
+                    "small",
+                    "medium",
+                    "large",
+                    "large_digits"
+                ]
+            }
+        },
+        {
+            "font": {
+                "name": "pager_msg_font_size",
+                "text": "Pager Message Size",
+                "allowed": [
+                    "small",
+                    "medium",
+                    "large"
+                ]
+            }
+        },
+        {
+            "font": {
+                "name": "pager_msg_scroll_font_size",
+                "text": "Pager Message Size",
+                "allowed": [
+                    "small",
+                    "medium",
+                    "large"
+                ]
+            }
+        },
+        {
+            "font": {
+                "name": "all_page_msg_font_size",
+                "text": "AllPage Message Size",
+                "allowed": [
+                    "small",
+                    "medium",
+                    "large"
+                ]
+            }
+        },
+        {
+            "font": {
+                "name": "all_page_msg_scroll_font_size",
+                "text": "AllPage Scroll Size",
+                "allowed": [
+                    "small",
+                    "medium",
+                    "large"
+                ]
+            }
+        },
+        {
+            "numeric": {
+                "name": "alert_scroll_period_ms",
+                "text": "Scroll Period ms",
+                "min": 0,
+                "max": 1000,
+                "size": 32
+            }
+        },
+        {
+            "numeric": {
+                "name": "alert_default_vibe_style",
+                "text": "Vibe Style",
+                "min": 0,
+                "max": 6,
+                "size": 8
+            }
+        },
+        {
+            "numeric": {
+                "name": "alert_default_beep_style",
+                "text": "Beep Style",
+                "min": 0,
+                "max": 2,
+                "size": 8
+            }
+        },
+        {
+            "boolean": {
+                "name": "alert_display_pager_id_enable",
+                "text": "Display Pager ID Enable"
+            }
+        },
+        {
+            "boolean": {
+                "name": "date_time_enable",
+                "text": "Date/Time Enable"
+            }
+        },
+        {
+            "numeric": {
+                "name": "gsm7_language",
+                "text": "GSM7 Language",
+                "min": 0,
+                "max": 2,
+                "size": 8
+            }
+        },
+        {
+            "boolean": {
+                "name": "left_hand_mode",
+                "text": "Left Hand Mode"
+            }
+        },
+        {
+            "boolean": {
+                "name": "programming_allowed",
+                "text": "OTA Programming"
+            }
+        },
+        {
+            "boolean": {
+                "name": "shutdown",
+                "text": "Deep Sleep"
+            }
+        },
+        {
+            "date": {
+                "name": "date",
+                "text": "Date"
+            }
+        },
+        {
+            "time": {
+                "name": "time",
+                "text": "Time"
+            }
+        },
+        {
+            "alert": {
+                "name": "alert_pager_control",
+                "text": "Alert Message Control"
+            }
+        },
+        {
+            "boolean": {
+                "name": "delete_all_msgs",
+                "text": "Delete All Messages"
+            }
+        }
+    ],
+    "menus": [
+        {
+            "name": "system",
+            "text": "System",
+            "submenus": [
+                {
+                    "name": "delete_all_msgs",
+                    "perms": "ReadWrite"
+                },
+                {
+                    "name": "date",
+                    "perms": "ReadWrite"
+                },
+                {
+                    "name": "time",
+                    "perms": "ReadWrite"
+                },
+                {
+                    "name": "pager_id",
+                    "perms": "ReadOnly"
+                },
+                {
+                    "name": "system_id",
+                    "perms": "ReadOnly"
+                },
+                {
+                    "name": "all_page_id",
+                    "perms": "ReadOnly"
+                }
+            ]
+        },
+        {
+            "name": "colors",
+            "text": "Colors",
+            "submenus": [
+                {
+                    "name": "pager_id_fg_color",
+                    "perms": "ReadWrite"
+                },
+                {
+                    "name": "pager_id_bg_color",
+                    "perms": "ReadWrite"
+                },
+                {
+                    "name": "pager_msg_fg_color",
+                    "perms": "ReadWrite"
+                },
+                {
+                    "name": "pager_msg_bg_color",
+                    "perms": "ReadWrite"
+                },
+                {
+                    "name": "all_page_msg_fg_color",
+                    "perms": "ReadWrite"
+                },
+                {
+                    "name": "all_page_msg_bg_color",
+                    "perms": "ReadWrite"
+                }
+            ]
+        },
+        {
+            "name": "buttons_backlight",
+            "text": "Buttons/Backlight",
+            "submenus": [
+                {
+                    "name": "vibe_key_click_enable",
+                    "perms": "ReadWrite"
+                },
+                {
+                    "name": "speaker_key_click_enable",
+                    "perms": "ReadWrite"
+                },
+                {
+                    "name": "backlight_bright_percent",
+                    "perms": "ReadWrite"
+                },
+                {
+                    "name": "backlight_dim_percent",
+                    "perms": "ReadWrite"
+                },
+                {
+                    "name": "backlight_bright_duration_ms",
+                    "perms": "ReadWrite"
+                },
+                {
+                    "name": "backlight_dim_duration_ms",
+                    "perms": "ReadWrite"
+                }
+            ]
+        },
+        {
+            "name": "fonts",
+            "text": "Fonts",
+            "submenus": [
+                {
+                    "name": "pager_id_font_size",
+                    "perms": "ReadWrite"
+                },
+                {
+                    "name": "pager_msg_font_size",
+                    "perms": "ReadWrite"
+                },
+                {
+                    "name": "pager_msg_scroll_font_size",
+                    "perms": "ReadWrite"
+                },
+                {
+                    "name": "all_page_msg_font_size",
+                    "perms": "ReadWrite"
+                },
+                {
+                    "name": "all_page_msg_scroll_font_size",
+                    "perms": "ReadWrite"
+                },
+                {
+                    "name": "alert_display_pager_id_enable",
+                    "perms": "ReadWrite"
+
+                }
+            ]
+        },
+        {
+            "name": "alerts",
+            "text": "Alerts",
+            "submenus": [
+                {
+                    "name": "alert_pager_control",
+                    "perms": "ReadWrite"
+                },
+                {
+                    "name": "alert_scroll_period_ms",
+                    "perms": "ReadWrite"
+                },
+                {
+                    "name": "vibe_enable",
+                    "perms": "ReadWrite"
+                },
+                {
+                    "name": "speaker_enable",
+                    "perms": "ReadWrite"
+                },
+                {
+                    "name": "alert_default_vibe_style",
+                    "perms": "ReadWrite"
+                },
+                {
+                    "name": "alert_default_beep_style",
+                    "perms": "ReadWrite"
+                }
+            ]
+        },
+        {
+            "name": "miscellaneous",
+            "text": "Miscellaneous",
+            "submenus": [
+                {
+                    "name": "programming_allowed",
+                    "perms": "ReadWrite"
+                },
+                {
+                    "name": "date_time_enable",
+                    "perms": "ReadWrite"
+                },
+                {
+                    "name": "gsm7_language",
+                    "perms": "ReadWrite"
+                },
+                {
+                    "name": "left_hand_mode",
+                    "perms": "ReadWrite"
+                },
+                {
+                    "name": "shutdown",
+                    "perms": "ReadWrite"
+                }
+            ]
+        }
+    ]
+}
