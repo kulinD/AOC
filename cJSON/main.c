@@ -267,64 +267,50 @@ bool populate_alert_control(MenuControl_t *menu_control, cJSON *alert)
 }
 
 // Function to populate a MenuControl_t structure from a cJSON object
-bool populate_menu_control(MenuControl_t *menu_control, cJSON *control)
+bool populate_menu_control(MenuControl_t *menu_control, cJSON *control, const char *type)
 {
-    if (!menu_control || !control)
+    if (!menu_control || !control || !type)
     {
         return false;
     }
 
     memset(menu_control, 0, sizeof(MenuControl_t));
 
-    cJSON *numeric = cJSON_GetObjectItem(control, "numeric");
-    cJSON *boolean = cJSON_GetObjectItem(control, "boolean");
-    cJSON *r5g6b5 = cJSON_GetObjectItem(control, "r5g6b5");
-    cJSON *percent = cJSON_GetObjectItem(control, "percent");
-    cJSON *font = cJSON_GetObjectItem(control, "font");
-    cJSON *date = cJSON_GetObjectItem(control, "date");
-    cJSON *time = cJSON_GetObjectItem(control, "time");
-    cJSON *alert = cJSON_GetObjectItem(control, "alert");
-
-    if (numeric)
+    // Populate the control based on the provided type
+    if (strcmp(type, "numeric") == 0)
     {
-        return populate_numeric_control(menu_control, numeric);
+        return populate_numeric_control(menu_control, control);
+    }
+    else if (strcmp(type, "boolean") == 0)
+    {
+        return populate_boolean_control(menu_control, control);
+    }
+    else if (strcmp(type, "r5g6b5") == 0)
+    {
+        return populate_r5g6b5_control(menu_control, control);
+    }
+    else if (strcmp(type, "percent") == 0)
+    {
+        return populate_percent_control(menu_control, control);
+    }
+    else if (strcmp(type, "font") == 0)
+    {
+        return populate_font_control(menu_control, control);
+    }
+    else if (strcmp(type, "date") == 0)
+    {
+        return populate_date_control(menu_control, control);
+    }
+    else if (strcmp(type, "time") == 0)
+    {
+        return populate_time_control(menu_control, control);
+    }
+    else if (strcmp(type, "alert") == 0)
+    {
+        return populate_alert_control(menu_control, control);
     }
 
-    if (boolean)
-    {
-        return populate_boolean_control(menu_control, boolean);
-    }
-
-    if (r5g6b5)
-    {
-        return populate_r5g6b5_control(menu_control, r5g6b5);
-    }
-
-    if (percent)
-    {
-        return populate_percent_control(menu_control, percent);
-    }
-
-    if (font)
-    {
-        return populate_font_control(menu_control, font);
-    }
-    
-    if (date)
-    {
-        return populate_date_control(menu_control, date);
-    }
-
-    if (time)
-    {
-        return populate_time_control(menu_control, time);
-    }
-
-    if (alert)
-    {
-        return populate_alert_control(menu_control, alert);
-    }
-
+    printf("Error: Unknown control type '%s'\n", type);
     return false;
 }
 
@@ -342,11 +328,35 @@ void parse_controls(cJSON *controls)
     cJSON_ArrayForEach(control, controls)
     {
         MenuControl_t menu_control = {0};
-        if (!populate_menu_control(&menu_control, control))
+
+        // Go through the keys of the control object to find the type
+        cJSON *type_object = NULL;
+        char *type_key = NULL;
+
+        cJSON_ArrayForEach(type_object, control)
         {
-            printf("Error: Failed to populate menu control\n");
+            type_key = type_object->string; // Get the key type (numeric, boolean, etc.)
+            if (type_key && type_object && cJSON_IsObject(type_object))
+            {
+                break; // Found the type key and its corresponding object
+            }
+        }
+
+        if (!type_key || !type_object)
+        {
+            printf("Error: Missing or invalid control type in control\n");
             continue;
         }
+
+        // populate_menu_control with the extracted type and object
+        if (!populate_menu_control(&menu_control, type_object, type_key))
+        {
+            printf("Error: Failed to populate menu control for type '%s'\n", type_key);
+            continue;
+        }
+
+        // Checking the populated control
+        printf("Control populated: Type: %s, Name: %s\n", type_key, menu_control.key);
     }
 }
 
@@ -414,10 +424,21 @@ void parse_menus(cJSON *menus, cJSON *controls)
                 cJSON *control = NULL;
                 cJSON_ArrayForEach(control, controls)
                 {
-                    cJSON *control_type = cJSON_GetObjectItem(control, submenu_name);
-                    if (control_type)
+                    cJSON *control_name = cJSON_GetObjectItem(control, "name"); // Get the name of the control
+                    cJSON *control_type = cJSON_GetObjectItem(control, "type"); // Get the type of the control
+                    if (control_name && cJSON_IsString(control_name) && strcmp(control_name->valuestring, submenu_name) == 0)
                     {
-                        populate_menu_control(&submenu_entry->control, control);
+                        if (control_type && cJSON_IsString(control_type))
+                        {
+                            if (!populate_menu_control(&submenu_entry->control, control, control_type->valuestring))
+                            {
+                                printf("Error: Failed to populate menu control '%s'\n", submenu_name);
+                            }
+                        }
+                        else
+                        {
+                            printf("Error: Missing or invalid type for control '%s'\n", submenu_name);
+                        }
                         break;
                     }
                 }
